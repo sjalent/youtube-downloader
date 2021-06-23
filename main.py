@@ -5,18 +5,67 @@ asciiArt = '@@kkdd,,\'\'\'\',,,,,,\'\'....\'\'\'\'\'\',,,,,,,,,,,,\n@@kkkk,,,,,,
 print(asciiArt + '\nYOUTUBE DOWNLOADER IN PYTHON')
 print('by szjalent\n')
 
-def downloadFunc():
-    print('\n###################################################################')
+def downloadOptions(video):
 
-    videoToDownload = YouTube(input('Youtube link to download:\n>> '))
+    print('\nChoose downloadable stream:\n\n1) 1080p video\n2) 720p video\n3) 480p video\n4) 360p video\n5) 240p video\n6) 144p video\n7) audio only')
+
+    stream1080P = [video.streams.get_by_itag(299), '1080p']
+    stream720P = [video.streams.get_by_itag(22), '720p']
+    stream480P = [video.streams.get_by_itag(135), '480p']
+    stream360P = [video.streams.get_by_itag(18), '360p']
+    stream240P = [video.streams.get_by_itag(133), '240p']
+    stream144P = [video.streams.get_by_itag(160), '144p']
+    streamAUDIO = [video.streams.get_by_itag(140), 'audio']
+
+    streamArray = [stream1080P, stream720P, stream480P, stream360P, stream240P, stream144P, streamAUDIO]
+
+    if len(streamArray) == 7:
+        print('The video you\'re trying to download (somehow) has no downloadable streams available.')
+        input('Press any key to exit.')
+        exit()
+
+    def chooseDnldStream(stream):
+        streamInput = input('\n>> ')
+        x = 0
+        if streamInput.isnumeric():
+            x = int(streamInput)
+        else:
+            print('Input a valid number')
+            chooseDnldStream(streamArray)
+        chosenStream = stream[(x - 1) % 7]
+        vidayo = chosenStream[0]
+        if type(vidayo) is not type('text') and vidayo != None:
+            return vidayo
+        else:
+            print('Couldn\'t find desired stream, please choose another.')
+            chooseDnldStream(streamArray)
+
+    return chooseDnldStream(streamArray)
+
+
+def downloadFunc():
+    print('\n###################################################################\n\nYoutube link to download:')
+
+    while True:
+        eenput = input('>> ')
+## regex is too much man
+        if 'https://www.youtube.com' in eenput or 'https://youtu.be' in eenput:
+            videoStreams = YouTube(eenput)
+            break
+        else:
+            print('Provide a valid Youtube URL\n')
+
+    videoToDownload = downloadOptions(videoStreams)
+
     titleOf = videoToDownload.title + ' - ' + str(uuid.uuid1())[0:7]
     directoryDownloadTo = input('\nWhere to save the video (leave blank if to root):\n>> ')
+    print('Proccessing...\n')
     if directoryDownloadTo == '':
-        print('\nDownloading to root...')
+        print('Downloading to root... (' + str(int(videoToDownload.filesize) / 1000000) + 'MB)')
     else:
-        print('\nDownloading to ' + directoryDownloadTo + '...')
+        print('Downloading to ' + directoryDownloadTo + '...')
 
-    videoToDownload.streams.first().download(directoryDownloadTo, titleOf)
+    videoToDownload.download(directoryDownloadTo, titleOf)
 
     print('\nDone! Downloaded video to ' + directoryDownloadTo + ' as ' + titleOf + ' .\n')
 
