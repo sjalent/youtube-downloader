@@ -7,7 +7,8 @@ print('by szjalent\n')
 
 def downloadOptions(video):
 
-    print('\nChoose downloadable stream:\n\n1) 1080p video\n2) 720p video\n3) 480p video\n4) 360p video\n5) 240p video\n6) 144p video\n7) audio only')
+    print('\nChecking for downloadable streams...')
+
 
     stream1080P = [video.streams.get_by_itag(299), '1080p']
     stream720P = [video.streams.get_by_itag(22), '720p']
@@ -19,10 +20,12 @@ def downloadOptions(video):
 
     streamArray = [stream1080P, stream720P, stream480P, stream360P, stream240P, stream144P, streamAUDIO]
 
-    if len(streamArray) == 7:
+    if len(streamArray[0]) and len(streamArray[1]) and len(streamArray[2]) and len(streamArray[3]) and len(streamArray[4]) and len(streamArray[5]) and len(streamArray[6]) == 1:
         print('The video you\'re trying to download (somehow) has no downloadable streams available.')
         input('Press any key to exit.')
         exit()
+
+    print('\nChoose downloadable stream:\n\n1) 1080p video\n2) 720p video\n3) 480p video\n4) 360p video\n5) 240p video\n6) 144p video\n7) audio only')
 
     def chooseDnldStream(stream):
         streamInput = input('\n>> ')
