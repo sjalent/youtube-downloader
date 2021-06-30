@@ -34,14 +34,12 @@ def downloadOptions(video):
             x = int(streamInput)
         else:
             print('Input a valid number')
-            chooseDnldStream(streamArray)
         chosenStream = stream[(x - 1) % 7]
         vidayo = chosenStream[0]
         if type(vidayo) is not type('text') and vidayo != None:
             return vidayo
         else:
             print('Couldn\'t find desired stream, please choose another.')
-            chooseDnldStream(streamArray)
 
     return chooseDnldStream(streamArray)
 
@@ -58,7 +56,11 @@ def downloadFunc():
         else:
             print('Provide a valid Youtube URL\n')
 
+
     videoToDownload = downloadOptions(videoStreams)
+
+    while videoToDownload is None:
+        videoToDownload = downloadOptions(videoStreams)
 
     titleOf = videoToDownload.title + ' - ' + str(uuid.uuid1())[0:7]
     directoryDownloadTo = input('\nWhere to save the video (leave blank if to root):\n>> ')
